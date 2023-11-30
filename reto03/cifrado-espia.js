@@ -1,4 +1,4 @@
-const POLICIES = require('./encryption_policies');
+const POLICIES = require('./encryption-policies');
 let codes = POLICIES.keys;
 
 let invalidKeys = [];
