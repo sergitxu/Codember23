@@ -1,34 +1,41 @@
-const QUARENTINE = require('./files-quarentine');
-let files = QUARENTINE.files;
+const fs = require('fs');
 
-function checkValidFiles(position) {
+const position = 33;
 
+fs.readFile('files_quarantine.txt', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Error al leer el archivo:', err);
+        return;
+    }
+
+    const files = data.split('\n');
     let valid_files = [];
-    let invalid_files = [];
+    let calculatedChecksum = '';
 
-    files.forEach(file => {
-        let first_part = file.substring(0, file.indexOf("-"));
-        let second_part = file.substring(file.indexOf("-") + 1, file.length);
-        let checksum = '';
-
-        checksum = first_part.charAt(0);
-        let repeated_character = '';
-        for (let i = 1; i < first_part.length; i++) {
-            if (checksum.includes(first_part.charAt(i))) {
-                repeated_character = first_part.charAt(i);
-            } else {
-                checksum += first_part.charAt(i);
-            }
-            checksum = checksum.replace(repeated_character, "");
+    files.forEach(fileToCheck => {
+        fileToCheck.toString();
+        let first_part = fileToCheck.substring(0, fileToCheck.indexOf("-"));
+        let second_part = fileToCheck.substring(fileToCheck.indexOf("-") + 1, fileToCheck.length - 1);
+        calculatedChecksum = checksumCalc(first_part);
+        if (calculatedChecksum === second_part) {
+            valid_files.push(calculatedChecksum);
         }
-        if (checksum === second_part) {
-            valid_files.push(checksum);
-        } else {
-            invalid_files.push(second_part, checksum);
-        }
-
     });
-    return valid_files[position - 1];
-}
+    console.log(valid_files[position - 1]);
+});
 
-console.log(checkValidFiles(33));
+function checksumCalc(fileName) {
+
+    let checksum = fileName.charAt(0);;
+
+    let repeated_character = '';
+    for (let i = 1; i < fileName.length; i++) {
+        if (checksum.includes(fileName.charAt(i))) {
+            repeated_character = fileName.charAt(i);
+        } else {
+            checksum += fileName.charAt(i);
+        }
+        checksum = checksum.replace(repeated_character, "");
+    }
+    return checksum;
+}
