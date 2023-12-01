@@ -25,18 +25,12 @@ function detectInvalid(data) {
             || !checkAlphanumeric(element.Id)
             || !element.Username
             || !checkAlphanumeric(element.Username)
-        ) {
-            invalidData.push(element);
-        } else if (!element.Email || !checkValidEmail(element.Email)) {
+            || !element.Email
+            || !checkValidEmail(element.Email)
+            || (element.Age && isNaN(element.Age))
+            || (element.Location && !isNaN(element.Location))) {
             invalidData.push(element);
         }
-        else
-            if (element.Age && isNaN(element.Age)) {
-                invalidData.push(element);
-            }
-            else if (element.Location && !isNaN(element.Location)) {
-                invalidData.push(element);
-            }
     });
     decipherMessage(invalidData);
 }
